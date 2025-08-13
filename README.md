@@ -4,6 +4,8 @@ A sophisticated **two-part AI system** that creates intelligent memory networks 
 
 ---
 
+**Sample Prompt and Results to assess Output quality** - [Here]()
+
 ## **Project Architecture**
 
 This project consists of **two main components** that work together to create an intelligent memory-aware research system:
@@ -109,7 +111,7 @@ Create a `.env` file with:
 ```env
 # Required API Keys
 GOOGLE_API_KEY=your_gemini_api_key
-GEMINI_API_KEY=your_gemini_api_key  
+GEMINI_API_KEY=your_gemini_api_key
 MEM0_API_KEY=your_mem0_api_key
 
 # Optional Configuration
@@ -320,16 +322,20 @@ search_limit = 5    # Memories per search iteration
 ## **Sample Research Prompts**
 
 ### **Medical Conditions & Treatment Analysis**
-*"Analyze my approach to diabetes management across all diabetic patients over time. How have my medication choices, dosing strategies, and combination therapies evolved? Which patients showed the best HbA1c improvements and what specific treatment patterns led to those outcomes?"*
+
+_"Analyze my approach to diabetes management across all diabetic patients over time. How have my medication choices, dosing strategies, and combination therapies evolved? Which patients showed the best HbA1c improvements and what specific treatment patterns led to those outcomes?"_
 
 ### **Diagnostic Patterns & Clinical Decision Making**
-*"Examine cases where diagnosis was challenging or took multiple visits to establish. What initial symptoms or presentations led to extended diagnostic processes? How do I approach differential diagnosis when patients present with non-specific symptoms?"*
+
+_"Examine cases where diagnosis was challenging or took multiple visits to establish. What initial symptoms or presentations led to extended diagnostic processes? How do I approach differential diagnosis when patients present with non-specific symptoms?"_
 
 ### **Patient Population Analysis**
-*"Compare my treatment approaches between younger and older patients with similar conditions. How do I modify medication choices, dosing, and monitoring based on age-related factors?"*
+
+_"Compare my treatment approaches between younger and older patients with similar conditions. How do I modify medication choices, dosing, and monitoring based on age-related factors?"_
 
 ### **Treatment Effectiveness & Outcomes**
-*"Analyze patient responses to first-line treatments across common conditions in my practice. Which medications do patients tolerate best and show optimal therapeutic response?"*
+
+_"Analyze patient responses to first-line treatments across common conditions in my practice. Which medications do patients tolerate best and show optimal therapeutic response?"_
 
 ---
 

@@ -12,11 +12,14 @@ Your analysis will be used by downstream research agents to:
 
 Provide rich, actionable insights while maintaining appropriate privacy levels.
 
-CRITICAL: Return ONLY valid JSON. Do not include any text, explanations, markdown formatting, or code blocks before or after the JSON.
-
-PLEASE DO NOT USE THESE ``` CODE BLOCKS IN OUTPUT JUST OUTPUT PLAIN JSON FOR ME WITHOUT ANY CODE BLOCK IN THE OUTPUT THAT YOU GIVE ME THANKS
-
-EXAMPLE - NO NEED FOR - ```json
+CRITICAL JSON OUTPUT REQUIREMENTS:
+- Return ONLY valid JSON - no other text whatsoever
+- Do NOT use ```json or ``` code blocks
+- Do NOT use markdown formatting  
+- Do NOT include explanatory text before or after
+- Start your response directly with { and end with }
+- No backticks, no code fences, no formatting marks
+- Pure JSON only
 
 CRITICAL OUTPUT REQUIREMENTS:
 - Keep lists Top-K only (small): primary_topics ≤ 5, top_terms ≤ 10, top_entities ≤ 5, examples ≤ 2
@@ -79,11 +82,14 @@ Analyze this data and return the exact JSON structure specified in your system p
 
 RESEARCH_PLANNER_PROMPT = """You are an intelligent research planner. Create a small, clean plan as raw JSON that is easy to parse and execute.
 
-CRITICAL: Return ONLY valid JSON. Do not include any text, explanations, or formatting marks before or after the JSON.
-
-PLEASE DO NOT USE THESE ``` CODE BLOCKS IN OUTPUT JUST OUTPUT PLAIN JSON FOR ME WITHOUT ANY CODE BLOCK IN THE OUTPUT THAT YOU GIVE ME THANKS
-
-EXAMPLE - NO NEED FOR - ```json
+CRITICAL JSON OUTPUT REQUIREMENTS:
+- Return ONLY valid JSON - no other text whatsoever
+- Do NOT use ```json or ``` code blocks
+- Do NOT use markdown formatting
+- Do NOT include explanatory text before or after
+- Start your response directly with { and end with }
+- No backticks, no code fences, no formatting marks
+- Pure JSON only
 
 GOAL:
 - Convert the user query + metadata into 3–6 ATOMIC steps.
@@ -128,12 +134,14 @@ You will receive:
 
 Your task: Create a memory traversal strategy that reconstructs the person's complete understanding/experience around the research topic.
 
-CRITICAL RULES:
-- Return ONLY valid JSON without any markdown formatting
-- NO backticks, NO ```json blocks, NO code fences
-- NO text before or after the JSON
-- Start directly with { and end with }
-- Do not wrap your response in any formatting marks whatsoever
+CRITICAL JSON OUTPUT REQUIREMENTS:
+- Return ONLY valid JSON - no other text whatsoever
+- Do NOT use ```json or ``` code blocks
+- Do NOT use markdown formatting
+- Do NOT include explanatory text before or after
+- Start your response directly with { and end with }
+- No backticks, no code fences, no formatting marks
+- Pure JSON only
 
 Return a JSON plan with this exact structure (no markdown):
 {
@@ -166,7 +174,7 @@ MEMORY-AWARE GUIDELINES:
 - Account for memory gaps as part of their story
 - Think like reconstructing a personal narrative, not finding information
 
-Remember: Output raw JSON only, no formatting marks, no explanations."""
+Remember: Output pure JSON only - start with { and end with }, no other text or formatting."""
 
 STRATEGIC_PLANNING_USER_PROMPT = """=== MEMORY TRAVERSAL STRATEGY PLANNING ===
 
@@ -349,22 +357,33 @@ MEMORY_ARCHAEOLOGIST_SYSTEM_PROMPT = """You are a MEMORY ARCHAEOLOGIST reconstru
 MEMORY TRAVERSAL STRATEGY TO FOLLOW:
 {strategic_plan}
 
-MINDSET: You're exploring a personal knowledge graph, not searching the web. Each memory connects to others through relationships (temporal, semantic, causal, entity-based).
+MINDSET: You're exploring a personal knowledge graph built from actual experiences and memories. Each memory connects through relationships (similarities, decisions, patterns, temporal evolution).
+
+CRITICAL SEARCH EXECUTION RULES:
+1. ONLY work with actual search results - never fabricate or invent information
+2. If searches return no results, try broader, more general terms
+3. Build progressively on specific discoveries from successful searches
+4. Use exact terminology that appears in memory fragments
+5. If multiple searches fail, state this clearly rather than inventing content
 
 Your role is to intelligently traverse their memory network:
-1. Follow memory connections revealed by search results
-2. Build progressive context about their personal journey/understanding
-3. Look for patterns in their thinking, decisions, and experiences
-4. Reconstruct how their understanding evolved over time
-5. Identify what's unique to THEIR experience with the topic
+1. Execute searches that actually find content in the database
+2. Build on specific discoveries from previous successful iterations
+3. Look for decision-making patterns in their actual experiences
+4. Reconstruct understanding based only on found memories
+5. Identify unique patterns from their personal memory network
 
-For each iteration:
-1. Consider what aspect of their memory network to explore next
-2. Choose search terms that reveal memory connections and relationships
-3. Look for patterns in their personal experience, not general facts
-4. Determine if you've reconstructed their complete understanding
+SEARCH FAILURE RECOVERY:
+- If specific searches find nothing, try broader terms from the research question
+- Use simple, common words that are likely to exist in memories
+- Better to find general relevant content than nothing specific
+- Never generate responses without actual memory evidence
 
-Keep searches SHORT and MEMORY-FOCUSED (2-3 words max)."""
+PROGRESSIVE SEARCH STRATEGY:
+- Start broad to establish content exists, then narrow based on discoveries
+- Use 2-5 word search terms that balance specificity with findability
+- Include actual names, terms, or concepts found in previous searches
+- Prioritize finding content over perfect specificity"""
 
 STRATEGIC_DECISION_PROMPT = """RESEARCH QUESTION: {question}
 
@@ -380,7 +399,7 @@ You are executing a multi-phase research strategy. Review your strategic plan an
 
 **PLAN EXECUTION ANALYSIS:**
 1. **Which phase** of your strategic plan are you currently executing?
-2. **What specific searches** from that phase should you be conducting?  
+2. **What specific searches** from that phase should you be conducting?
 3. **What key patterns** have emerged that align with the phase's expected findings?
 4. **What missing elements** from the current phase need to be discovered?
 5. **Should you advance** to the next phase or continue current phase exploration?
@@ -388,50 +407,99 @@ You are executing a multi-phase research strategy. Review your strategic plan an
 **STRATEGIC PROGRESSION:**
 - Follow the planned **search sequences** from your strategy
 - Look for **expected findings** outlined in each phase
-- Use suggested **filters and metadata** from the plan  
+- Use suggested **filters and metadata** from the plan
 - Progress through phases **systematically** rather than random exploration
 - Adapt searches based on **actual discoveries** vs planned expectations
 
 **NEXT SEARCH DECISION:**
 Base your next search on:
-- Specific searches outlined in your strategic plan phases
-- Gaps between expected findings and actual discoveries
-- Natural progression through the planned investigation sequence
+- Specific clinical details discovered in previous iterations (patient names, drug names, HbA1c values)
+- Concrete gaps in clinical reasoning or decision-making patterns identified
+- Natural progression from general patterns to specific clinical criteria
+- Actual terminology and medical language found in memory fragments
+
+**PROGRESSIVE SEARCH GUIDELINES:**
+- Build on actual discoveries from previous searches (use specific names, terms, concepts found)
+- If previous searches found nothing, try broader, more general terms
+- Use exact terminology that appeared in memory fragments from previous iterations
+- Progress logically: general concepts → specific scenarios → detailed patterns
+- If searches consistently fail, pivot to completely different terminology
+
+**SEARCH FAILURE RECOVERY:**
+- If last search returned 0 results, try broader terms from the research question
+- If multiple searches fail, use basic keywords from the original user query
+- Never generate fabricated content - only work with actual search results
+- If no memories found, state this clearly rather than inventing information
 
 Respond with:
-ENOUGH_INFO: YES or NO  
-NEXT_SEARCH: search term following your strategic plan (specific, targeted)
-MEMORY_REASONING: How this search advances your strategic plan phases and addresses discovered gaps"""
+ENOUGH_INFO: YES or NO
+NEXT_SEARCH: search term that builds on actual discoveries or recovers from search failures (2-5 words)
+MEMORY_REASONING: How this search addresses discovered gaps or recovers from previous search failures"""
 
 SEARCH_TERM_EXTRACTION_PROMPT = """RESEARCH QUESTION: {question}
 
 STRATEGIC PLAN WITH PHASES: {strategic_plan}
 
-You need to start executing the first phase of your strategic research plan. 
+You need to start executing the first phase of your strategic research plan.
 
 **PHASE 1 ANALYSIS:**
 - Look at the **first phase** in your strategic plan
-- Identify the **specific searches** outlined for Phase 1  
+- Identify the **specific searches** outlined for Phase 1
 - Choose the **most important initial search** from that phase
 - Consider the **expected findings** and **metadata filters** mentioned
 
 **STRATEGIC EXECUTION:**
 Your search should:
-- Follow the Phase 1 search strategy exactly
-- Target the phase's specific objectives
-- Use terminology consistent with the planned approach
-- Set up subsequent searches in the phase sequence
+- Target Phase 1's specific clinical objectives with precise terminology
+- Use medical language that matches clinical documentation style
+- Generate terms that will find specific patient scenarios and decision points
+- Set foundation for progressive, increasingly targeted subsequent searches
 
-**EXAMPLE PROCESS:**
-If Phase 1 seeks "patient identification" → start with terms that find patients
-If Phase 1 wants "baseline establishment" → start with foundational terms
-If Phase 1 focuses "temporal anchoring" → start with time-based terms
+**SEARCH EXAMPLES FOR DIFFERENT OBJECTIVES:**
+If Phase 1 seeks "foundational understanding" → "diabetes treatment" or "patient management" 
+If Phase 1 wants "decision patterns" → "medication selection" or "treatment decisions"
+If Phase 1 focuses "outcome analysis" → "treatment outcomes" or "patient results"
 
-Extract the **first search term** that initiates your Phase 1 strategy.
+**SEARCH TERM REQUIREMENTS:**
+- 2-5 words that balance findability with specificity
+- Use terminology likely to appear in memory database
+- Start broad enough to find content, then build specificity
+- Include key concepts from the research question
+- Avoid overly narrow terms unless database content is confirmed
 
-Return ONLY the strategic search term (based on your plan, 2-4 words)."""
+**FINDABILITY PRIORITY:**
+- Prioritize terms that definitely exist over perfect specificity
+- Better to find broad relevant content than nothing specific
+- Build complexity only after establishing basic content exists
 
-SEARCH_TERM_EXTRACTION_SYSTEM = "You analyze strategic research plans to identify optimal starting search terms. Extract simple, focused terms that would find the most relevant memories for the research question."
+Return ONLY the strategic search term (2-5 words, balanced for findability)."""
+
+SEARCH_TERM_EXTRACTION_SYSTEM = """You analyze strategic research plans and context to generate precise, targeted search terms that will discover specific memories from the database.
+
+PROGRESSIVE SEARCH STRATEGY:
+- Start with broad, foundational terms that are likely to find content
+- Build on concrete findings from previous searches
+- Use specific terminology that matches the actual language in memories
+- Progress from general concepts to specific scenarios and details
+- Ensure search terms are broad enough to find content but specific enough to be useful
+
+SEARCH TERM REQUIREMENTS:
+- 2-5 words that balance specificity with findability
+- Use terminology that likely appears in the memory database
+- Start broad, then narrow based on discoveries
+- Include key concepts from the research question
+- Avoid overly technical jargon unless confirmed in database
+
+EFFECTIVE SEARCH PROGRESSION:
+1. Start broad: "diabetes treatment" → "patient management" → "medication decisions"
+2. Build specificity: "treatment outcomes" → "medication effectiveness" → "patient response patterns"
+3. Target gaps: "compliance issues" → "side effects" → "dosage adjustments"
+
+SEARCH TERM VALIDATION:
+- Terms should be findable in typical memory databases
+- Avoid terms that are too narrow or specialized initially
+- Build complexity only after confirming basic concepts exist
+- Prioritize terms that appear in the research question or strategic plan"""
 
 STRATEGIC_MEMORY_ANALYSIS_PROMPT = """{context_section}
 
@@ -439,35 +507,36 @@ STRATEGIC_MEMORY_ANALYSIS_PROMPT = """{context_section}
 
 You conducted strategic memory exploration to answer the research question.
 
+CRITICAL: Only use information explicitly found in your search results. If no relevant memories were found, state this clearly.
+
 Create a focused response that synthesizes your findings:
 
 ## Response Format:
-**Research Answer:** [Direct response to the question based on memory exploration]
+**Research Answer:** [Direct response based ONLY on actual memory discoveries, or state if insufficient data found]
 
 **Memory Patterns Discovered:**
-- Key pattern 1 [Memory-{{id}} citations]
-- Key pattern 2 [Memory-{{id}} citations]
-- Key pattern 3 [Memory-{{id}} citations]
+- Only include patterns with actual memory citations [Memory-{{id}}]
+- If no clear patterns found, state: "Insufficient memory data to identify clear patterns"
 
-**Personal Journey Insights:** [How their understanding/experience evolved - what's unique to them]
+**Key Discoveries:** [What was actually found in the memory network]
 
-**Supporting Evidence:** [Important details that support your answer, all with memory citations]
+**Supporting Evidence:** [Only cite information explicitly present in search results with memory IDs]
 
-**Research Limitations:** [What wasn't found in their memory network and why]
+**Research Limitations:** [What searches were attempted, what was/wasn't found, why analysis is limited]
 
-## Citation and Evidence Rules:
-- Every fact must cite specific memory IDs from the research findings
-- Use format: [Memory-{{id}}] or [Memory-{{id}}:{{patient/context}}]
-- Only reference information explicitly found in their memories
-- Track which specific memories support each claim
-- If data is missing, clearly state this limitation
+## Evidence Requirements:
+- NEVER fabricate or invent memory citations
+- Only reference information explicitly found in search results
+- If searches returned no results, state this clearly
+- Use format [Memory-{{id}}] only for actual discovered memories
+- If insufficient evidence exists, say so rather than speculating
 
 ## Response Guidelines:
-- 500-700 words maximum - comprehensive but focused
-- Emphasize what's unique to THEIR memory/experience
-- Start with direct answer, then supporting patterns
-- Focus on insights, not research methodology
-- Be honest about data gaps and limitations"""
+- Be completely honest about search success/failure
+- If memory exploration was unsuccessful, explain why
+- Only make claims supported by actual found memories
+- 300-500 words - focused on actual discoveries
+- If no meaningful patterns found, provide brief summary of what was attempted"""
 
 MEMORY_ANALYST_SYSTEM_PROMPT = """You are a MEMORY ANALYST who reconstructs personal understanding from memory networks.
 
