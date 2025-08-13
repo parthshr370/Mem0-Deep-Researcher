@@ -4,7 +4,7 @@ A sophisticated **two-part AI system** that creates intelligent memory networks 
 
 ---
 
-**Sample Prompt and Results to assess Output quality** - [Here]()
+**Sample Prompt and Results to assess Output quality** - [Here](https://github.com/parthshr370/Mem0-Deep-Researcher/blob/main/output/20250813_183755_final_answer.md) [Report Here](https://github.com/parthshr370/Mem0-Deep-Researcher/blob/main/output/20250813_184136_analysis_report.md)
 
 ## **Project Architecture**
 
